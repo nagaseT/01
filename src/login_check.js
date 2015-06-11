@@ -16,14 +16,14 @@ var PASSWORD_CHECK = {
 function checkInput(){
   this.clearAlert();
   var checkUsernameParams = USERNAME_CHECK;
-  checkUsernameParams.inputStr = document.form_login.field_username.value;
+  checkUsernameParams.inputStr = document.form_login.username.value;
   var checkUsernameResult = this.validate(checkUsernameParams);
   if(!checkUsernameResult.result){
     this.addAlert(checkUsernameResult.errorMessage);
     return false;
   }
   var checkPasswordParams = PASSWORD_CHECK;
-  checkPasswordParams.inputStr = document.form_login.field_password.value;
+  checkPasswordParams.inputStr = document.form_login.password.value;
   var checkPasswordResult = this.validate(checkPasswordParams);
   if(!checkPasswordResult.result){
     this.addAlert(checkPasswordResult.errorMessage);
@@ -39,8 +39,8 @@ function validate(params){
 	var results = {result: false, errorMessage: params.numberErrorMessage};
     return results;
   } else {
-  	var hoge = params.inputStr.match(params.unallowedCharacters);
-  	if (hoge){
+  	var matchingResult = params.inputStr.match(params.unallowedCharacters);
+  	if (matchingResult){
   		var results = {result: false, errorMessage: params.typeErrorMessage};
   		return results;
   	}
