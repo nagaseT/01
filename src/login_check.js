@@ -1,4 +1,5 @@
 var USERNAME_CHECK = {
+      tagName: 'username',
 			maxStr: 8,
 			minStr: 2,
 			unallowedCharacters: new RegExp("[^a-z-]", "g"),
@@ -6,6 +7,7 @@ var USERNAME_CHECK = {
 			typeErrorMessage: 'ERROR : usernameに使用できるのは英小文字と - のみです。'
 		};
 var PASSWORD_CHECK = {
+      tagName: 'password',
 			maxStr: 24,
 			minStr: 6,
 			unallowedCharacters: new RegExp("[^a-zA-Z-+!@]", "g"),
@@ -15,19 +17,16 @@ var PASSWORD_CHECK = {
 
 function checkInput(){
   this.clearAlert();
-  var checkUsernameParams = USERNAME_CHECK;
-  checkUsernameParams.inputStr = document.form_login.username.value;
-  var checkUsernameResult = this.validate(checkUsernameParams);
-  if(!checkUsernameResult.result){
-    this.addAlert(checkUsernameResult.errorMessage);
-    return false;
-  }
-  var checkPasswordParams = PASSWORD_CHECK;
-  checkPasswordParams.inputStr = document.form_login.password.value;
-  var checkPasswordResult = this.validate(checkPasswordParams);
-  if(!checkPasswordResult.result){
-    this.addAlert(checkPasswordResult.errorMessage);
-    return false;
+
+  var checkParams = [USERNAME_CHECK,　PASSWORD_CHECK];
+  for (var i = 0; i < checkParams.length; i++) {
+    //var type = checkParams[i].tagName;
+    checkParams[i].inputStr = document.form_login[checkParams[i].tagName].value;
+    var checkResult = this.validate(checkParams[i]);
+    if(!checkResult.result){
+      this.addAlert(checkResult.errorMessage);
+      return false;
+    }   
   }
   return true;
 }
