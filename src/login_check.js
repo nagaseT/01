@@ -20,7 +20,6 @@ function checkInput(){
 
   var checkParams = [USERNAME_CHECK,　PASSWORD_CHECK];
   for (var i = 0; i < checkParams.length; i++) {
-    //var type = checkParams[i].tagName;
     checkParams[i].inputStr = document.form_login[checkParams[i].tagName].value;
     var checkResult = this.validate(checkParams[i]);
     if(!checkResult.result){
