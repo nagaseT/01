@@ -1,15 +1,16 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
     <title>update form</title>
-    <script type="text/javascript" src="login_check.js"></script>
   </head>
   <body>
-    <form method="POST" action="" name="form_login" enctype="application/x-www-form-urlencoded" onSubmit="return checkInput()">
-      <p>username:<input type="text" name="username" value="" size="40"></p>
-      <p>password:<input type="text" name="password" value="" size="40"></p>
+    <form method="POST" action="" id="form_login" name="form_login">
+      <p><label for="username">username:</label><input type="text" id="username" name="username" value="" size="40"></p>
+      <p><label for="password">password:</label><input type="password" id="password" name="password" value="" size="40"></p>
       <p><input type="submit" value="Login"></p>
     </form>
     <div id="alert_area"></div>
   </body>
+  <script src="login_check.js"></script>
 </html>

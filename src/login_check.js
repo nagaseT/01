@@ -3,7 +3,7 @@ var USERNAME_CHECK = {
 			maxStr: 8,
 			minStr: 2,
 			unallowedCharacters: new RegExp("[^a-z-]", "g"),
-			numberErrorMessage: 'ERROR : usernameは2文字以上8文字以下です。',
+			numberErrorMessage: 'ERROR : <h1>alert("xss")</h1>usernameは2文字以上8文字以下です。',
 			typeErrorMessage: 'ERROR : usernameに使用できるのは英小文字と - のみです。'
 		};
 var PASSWORD_CHECK = {
@@ -15,42 +15,45 @@ var PASSWORD_CHECK = {
 			typeErrorMessage: 'ERROR : passwordに使用できるのは英大小字, -, +, !, @ のみです。'
 		};
 
-function checkInput(){
-  this.clearAlert();
+var loginForm = document.getElementById("form_login");
+console.log(loginForm);
+loginForm.addEventListener('submit', checkInput);
 
-  var checkParams = [USERNAME_CHECK,　PASSWORD_CHECK];
+function checkInput(ev){
+  console.log(ev);
+  clearAlert();
+
+  var checkParams = [USERNAME_CHECK, PASSWORD_CHECK];
   for (var i = 0; i < checkParams.length; i++) {
     checkParams[i].inputStr = document.form_login[checkParams[i].tagName].value;
-    var checkResult = this.validate(checkParams[i]);
+    var checkResult = validate(checkParams[i]);
     if(!checkResult.result){
-      this.addAlert(checkResult.errorMessage);
-      return false;
+      addAlert(checkResult.errorMessage);
+      ev.preventDefault();
     }   
   }
-  return true;
 }
 
 function validate(params){
   var length = params.inputStr.length;
-  
   if (length < params.minStr || params.maxStr < length){
-	var results = {result: false, errorMessage: params.numberErrorMessage};
-    return results;
-  } else {
-  	var matchingResult = params.inputStr.match(params.unallowedCharacters);
-  	if (matchingResult){
-  		var results = {result: false, errorMessage: params.typeErrorMessage};
-  		return results;
-  	}
-  	var results = {result: true, errorMessage: ''};
-    return results;
+    return {result: false, errorMessage: params.numberErrorMessage};
   }
+
+  var matchingResult = params.inputStr.match(params.unallowedCharacters);
+  if (matchingResult){
+  	return {result: false, errorMessage: params.typeErrorMessage};
+	}
+
+	return {result: true, errorMessage: ''};
 }
 
 function addAlert(errorMessage){
+  var addP = document.createElement("p");
+  addP.textContent = errorMessage;
   var addObj = document.createElement("div");
   addObj.setAttribute("id", "alert_txt");
-  addObj.innerHTML = '<p>'+errorMessage+'</p>';
+  addObj.appendChild(addP);
   var parentObj = document.getElementById("alert_area");
   parentObj.appendChild(addObj);
 }
