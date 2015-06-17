@@ -1,59 +1,78 @@
 var USERNAME_CHECK = {
-      tagName: 'username',
-			maxStr: 8,
-			minStr: 2,
-			unallowedCharacters: new RegExp("[^a-z-]", "g"),
-			numberErrorMessage: 'ERROR : <h1>alert("xss")</h1>usernameは2文字以上8文字以下です。',
-			typeErrorMessage: 'ERROR : usernameに使用できるのは英小文字と - のみです。'
-		};
+      maxStr: 8,
+      minStr: 2,
+      unallowedCharacters: new RegExp("[^a-z-]", "g"),
+      numberErrorMessage: 'ERROR : usernameは2文字以上8文字以下です。',
+      typeErrorMessage: 'ERROR : usernameに使用できるのは英小文字と - のみです。'
+    };
 var PASSWORD_CHECK = {
-      tagName: 'password',
-			maxStr: 24,
-			minStr: 6,
-			unallowedCharacters: new RegExp("[^a-zA-Z-+!@]", "g"),
-			numberErrorMessage: 'ERROR : passwordは6文字以上24文字以下です。',
-			typeErrorMessage: 'ERROR : passwordに使用できるのは英大小字, -, +, !, @ のみです。'
-		};
+      maxStr: 24,
+      minStr: 6,
+      unallowedCharacters: new RegExp("[^a-zA-Z-+!@]", "g"),
+      numberErrorMessage: 'ERROR : passwordは6文字以上24文字以下です。',
+      typeErrorMessage: 'ERROR : passwordに使用できるのは英大小字, -, +, !, @ のみです。'
+    };
 
 var loginForm = document.getElementById("form_login");
-console.log(loginForm);
-loginForm.addEventListener('submit', checkInput);
+loginForm.addEventListener('submit', onSubmit);
 
-function checkInput(ev){
-  console.log(ev);
+function onSubmit(ev){
   clearAlert();
-
-  var checkParams = [USERNAME_CHECK, PASSWORD_CHECK];
-  for (var i = 0; i < checkParams.length; i++) {
-    checkParams[i].inputStr = document.form_login[checkParams[i].tagName].value;
-    var checkResult = validate(checkParams[i]);
-    if(!checkResult.result){
-      addAlert(checkResult.errorMessage);
-      ev.preventDefault();
-    }   
+  var inputValues = getInputData();
+  var errorMessages = checkInput(inputValues);
+  if (Object.keys(errorMessages).length !== 0){
+    showAlert(errorMessages);
+    ev.preventDefault();
+    return;
   }
 }
 
-function validate(params){
-  var length = params.inputStr.length;
+function getInputData(){
+  var username = document.form_login.username.value;
+  var password = document.form_login.password.value;
+  return {username: username, password: password};
+}
+
+function checkInput(values){
+  var messages = {};
+  var checkUsernameResults = validate(values.username, USERNAME_CHECK);
+  if (checkUsernameResults.length !== 0){
+    messages.username = checkUsernameResults;
+  }
+  var checkPasswordResults = validate(values.password, PASSWORD_CHECK);
+  if (checkPasswordResults.length !== 0){
+    messages.password = checkPasswordResults;
+  }
+  return messages;
+}
+
+function validate(value, params){
+  var ary = [];
+  var length = value.length;
   if (length < params.minStr || params.maxStr < length){
-    return {result: false, errorMessage: params.numberErrorMessage};
+    ary.push(params.numberErrorMessage);
   }
-
-  var matchingResult = params.inputStr.match(params.unallowedCharacters);
+  var matchingResult = value.match(params.unallowedCharacters);
   if (matchingResult){
-  	return {result: false, errorMessage: params.typeErrorMessage};
-	}
-
-	return {result: true, errorMessage: ''};
+    ary.push(params.typeErrorMessage);
+  }
+  return ary;
 }
 
-function addAlert(errorMessage){
-  var addP = document.createElement("p");
-  addP.textContent = errorMessage;
+function showAlert(errorMessages){
   var addObj = document.createElement("div");
   addObj.setAttribute("id", "alert_txt");
-  addObj.appendChild(addP);
+
+  for (key in errorMessages) {
+    var messages = errorMessages[key];
+    var length = messages.length;
+    for (var i = 0; i < length; i++) {
+      var pObj = document.createElement("p");
+      pObj.textContent = messages[i];
+      addObj.appendChild(pObj);
+    }
+  }
+
   var parentObj = document.getElementById("alert_area");
   parentObj.appendChild(addObj);
 }
@@ -61,7 +80,7 @@ function addAlert(errorMessage){
 function clearAlert(){
   var parentObj = document.getElementById("alert_area");
   var clearObj = document.getElementById("alert_txt");
-  if (clearObj) {
+  if (clearObj){
     parentObj.removeChild(clearObj);
   }
 }
