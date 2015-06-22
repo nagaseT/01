@@ -43,7 +43,7 @@ function validation(params) {
     var usernameMatching = username.match(USERNAME_CHECK.unallowedCharacters);
     if (usernameMatching){
       messages.push(USERNAME_CHECK.typeErrorMessage);
-    }    
+    }
   }
 
   var password = params.password;
