@@ -1,14 +1,14 @@
 var USERNAME_CHECK = {
   maxStr: 8,
   minStr: 2,
-  unallowedCharacters: new RegExp("[^a-z-]", "g"),
+  unallowedCharacters: new RegExp('[^a-z-]', 'g'),
   numberErrorMessage: 'ERROR : usernameは2文字以上8文字以下です。',
   typeErrorMessage: 'ERROR : usernameに使用できるのは英小文字と - のみです。'
 };
 var PASSWORD_CHECK = {
   maxStr: 24,
   minStr: 6,
-  unallowedCharacters: new RegExp("[^a-zA-Z-\+!@]", "g"),
+  unallowedCharacters: new RegExp('[^a-zA-Z-\+!@]', 'g'),
   numberErrorMessage: 'ERROR : passwordは6文字以上24文字以下です。',
   typeErrorMessage: 'ERROR : passwordに使用できるのは英大小字, -, +, !, @ のみです。'
 };
